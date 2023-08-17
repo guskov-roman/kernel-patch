@@ -1,0 +1,49 @@
+From 387dc968c55e2abb542536e19237c92fa74ef2d1 Mon Sep 17 00:00:00 2001
+From: Roman Guskov <guskov.roman@gmail.com>
+Date: Thu, 17 Aug 2023 16:17:59 +0200
+Subject: [PATCH] x86/module: add Kconfig options for disallow unload kernel
+ modules
+
+---
+ kernel/module/Kconfig | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
+index 33a2e991f608..3efe8987c49a 100644
+--- a/kernel/module/Kconfig
++++ b/kernel/module/Kconfig
+@@ -136,6 +136,31 @@ config MODULE_UNLOAD
+ 	  anyway), which makes your kernel smaller, faster
+ 	  and simpler.  If unsure, say Y.
+ 
++ config MODULE_UNLOAD_BLACKLIST
++	bool "Module unload blacklist"
++    depends on MODULE_UNLOAD
++    default n
++	help
++	  Disbaled unloading kernel modules from the list.
++	    If unsure, say N.
++
++config MODULE_UNLOAD_BLACKLIST_CMDLINE
++	string "Module unload blacklist cmdline"
++    depends on MODULE_UNLOAD && MODULE_UNLOAD_BLACKLIST
++    default ""
++	help
++	  Allow generic configuration of the disallow the unload moduels via
++	  the kernel command line.
++
++	  The example for the command line is as follows:
++
++	  unload_blacklist=<brcmfmac,hci_uart>
++
++	  Due to the way Linux handles the command line, no spaces are
++	  allowed in the module definition.
++
++	  If unsure, say 'N'.
++
+ config MODULE_FORCE_UNLOAD
+ 	bool "Forced module unloading"
+ 	depends on MODULE_UNLOAD
+-- 
+2.34.1
+
